@@ -6,6 +6,10 @@ using namespace std;
 
 class digit
 {
+    private://might have to change this
+    digit *head;
+    digit * tail;
+
     public:
     int data;
     digit *next = nullptr;
@@ -24,6 +28,9 @@ void printNum(digit * num);
 void printRecursive(digit * num);
 void subtractCarry(digit * head, digit * prev);
 digit * clearLeadingZeros(digit * num);
+void * addZero(digit *& num);
+void * addEnd(digit *& res, int value);
+
 
 //-----------------PROVIDED BY INSTRUCTOR-----------------
 int main() {
@@ -179,7 +186,102 @@ void deleteNum(digit * num){
 
 // TODO: Implement function to add 2 numbers stored in 2 linked lists
 digit * addNumbers(digit * left, digit * right){ // this function makes numbers in order.
-    return nullptr;
+   
+    digit *cursorLeft = new digit;
+    digit *cursorRight = new digit;
+    digit * res = nullptr;
+    cursorLeft = left;
+    cursorRight = right;
+    
+    int countLeft = 0;
+    int countRight = 0;
+    //traverse both list to find number count and compare
+    while(cursorLeft!=nullptr)
+    {
+        countLeft++;
+        cursorLeft = cursorLeft->next;//updates to next node
+    }
+    while(cursorRight != nullptr)
+    {   
+        countRight++;
+        cursorRight = cursorRight->next;
+    }
+
+    //this test works
+    cout << "\nleft and right counters" <<endl;
+    cout << countLeft << " "<<countRight<<endl;
+
+    //top is longer than bot
+    int difference;
+    if(countLeft>countRight)
+    {
+        difference = countLeft-countRight;
+        //ex 3 - 2 = 1
+        cout <<"difference: " << difference <<endl;
+        for(int a = 0;a<difference;a++)
+        {
+            addZero(right);
+        }
+    }else if(countLeft<countRight)
+    {
+        difference = countRight-countLeft;
+        //ex 4 - 1 = 3
+        cout <<"difference: " <<difference <<endl;
+        for(int b =0; b < difference; b++)
+        {
+            addZero(left);
+        }
+    }
+  
+    cursorLeft = left;//reset the cursors
+    cursorRight = right;
+    /*
+        traverse the left and right test
+        CONCLUSION: both left and right list are working right
+        res is the problem
+    */
+   cout << "left list"<<endl;
+   while(cursorLeft!=nullptr)
+   {
+       cout << cursorLeft->data;
+       cursorLeft = cursorLeft->next;
+   }
+    cout <<endl;
+    cout << "right list" << endl;
+    while(cursorRight!=nullptr)
+    {
+        cout << cursorRight->data;
+        cursorRight = cursorRight->next;
+    }
+    cout <<endl;
+
+    cursorRight = right;//resets the cursor
+    cursorLeft = left;
+    int num;
+    while(cursorLeft!=nullptr)
+    {
+        num = cursorLeft->data+cursorRight->data;
+        addEnd(res,num);
+        cursorLeft = cursorLeft->next;
+        cursorRight = cursorRight->next;
+
+
+    }
+
+
+    //testing out res;
+    cout << "testing out"<<endl;
+    digit * cur;
+    cur = res;
+    while(cur != nullptr)
+    {
+        cout << cur->data;
+        cur = cur->next;
+    }
+
+
+    
+    return res;
 }
 
 //-----------------PROVIDED BY INSTRUCTOR-----------------
@@ -212,4 +314,47 @@ digit * clearLeadingZeros(digit * num){
     }
 void setNeg(digit * num){
     num->data = -num->data;
+}
+///////////////////////////////////////////////////////////
+void * addZero(digit *& head)
+{
+    digit*temp = new digit;
+    temp->data = 0;
+    temp->next = nullptr;
+
+    digit * current = new digit;
+    digit * prev = new digit;
+    current = head;
+
+    while(current!=nullptr)
+    {//traverse with current and prev
+        prev = current;
+        current = current->next;
+    }
+    prev->next = temp;
+    temp = current;
+}
+void * addEnd(digit*& res, int value)
+{
+    digit * temp = new digit;
+    temp->data = value;
+    temp->next = nullptr;
+
+    if(res==nullptr)
+    {
+        res = temp;
+        temp = nullptr;
+    }
+    else{
+        digit * current;
+        digit * prev;
+
+        current = res;
+        while(current!=nullptr)
+        {
+            prev = current;
+            current = current ->next;
+        }
+        prev->next = temp;
+    }
 }
